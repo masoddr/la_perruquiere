@@ -30,12 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                entry.target.classList.add('loaded');
+                entry.target.classList.add('fade-in');
             }
         });
     }, {
-        threshold: 0.1
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
     });
 
     document.querySelectorAll('.section').forEach((section) => {
@@ -43,17 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Menu mobile
-    const menuToggle = document.createElement('div');
-    menuToggle.className = 'menu-toggle';
-    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-    
-    const navbar = document.querySelector('.navbar');
+    const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
     
-    if (window.innerWidth <= 768) {
-        navbar.insertBefore(menuToggle, navLinks);
-    }
-
     menuToggle.addEventListener('click', () => {
         navLinks.classList.toggle('active');
         menuToggle.innerHTML = navLinks.classList.contains('active') 
@@ -81,6 +73,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     behavior: 'smooth',
                     block: 'start'
                 });
+                // Fermer le menu mobile si ouvert
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
             }
         });
     });
@@ -135,42 +132,100 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-rotation du carrousel
     setInterval(() => goToSlide(currentIndex + 1), 5000);
 
+    // Gestion de la galerie
+    const galleryGrid = document.querySelector('.gallery-grid');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    // Images de la galerie (à remplacer par vos images)
+    const galleryImages = [
+        { src: 'path-to-image1.jpg', category: 'courts', alt: 'Coupe courte' },
+        { src: 'path-to-image2.jpg', category: 'longs', alt: 'Coupe longue' },
+        { src: 'path-to-image3.jpg', category: 'accessoires', alt: 'Accessoire' }
+    ];
+
+    // Création des éléments de la galerie
+    function createGalleryItems(images) {
+        galleryGrid.innerHTML = '';
+        images.forEach(img => {
+            const item = document.createElement('div');
+            item.className = 'gallery-item fade-in';
+            item.dataset.category = img.category;
+            item.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+            galleryGrid.appendChild(item);
+        });
+    }
+
+    // Filtrage de la galerie
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const category = btn.dataset.filter;
+            const filteredImages = category === 'all' 
+                ? galleryImages 
+                : galleryImages.filter(img => img.category === category);
+            
+            createGalleryItems(filteredImages);
+        });
+    });
+
+    // Initialisation de la galerie
+    createGalleryItems(galleryImages);
+
     // Gestion du formulaire de contact
-    window.sendEmail = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const submitBtn = form.querySelector('.submit-btn');
-        submitBtn.classList.add('loading');
-
-        const formData = {
-            name: form.name.value,
-            email: form.email.value,
-            phone: form.phone.value,
-            message: form.message.value
-        };
-
-        // Construction du corps du mail
-        const mailtoLink = `mailto:CHEZLAPERRUQUIERE@GMAIL.COM?subject=Nouveau message de ${formData.name}&body=Nom: ${formData.name}%0D%0AEmail: ${formData.email}%0D%0ATéléphone: ${formData.phone}%0D%0A%0D%0AMessage:%0D%0A${formData.message}`;
-
-        // Ouverture du client mail
-        window.location.href = mailtoLink;
-
+    const contactForm = document.getElementById('contact-form');
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        
+        // Simulation d'envoi (à remplacer par votre logique d'envoi)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Affichage du message de confirmation
+        showToast('Message envoyé avec succès !');
+        
         // Réinitialisation du formulaire
-        form.reset();
-        submitBtn.classList.remove('loading');
+        contactForm.reset();
+        submitBtn.innerHTML = 'Envoyer le message <i class="fas fa-paper-plane"></i>';
+    });
 
-        // Message de confirmation
+    // Fonction pour afficher un toast
+    function showToast(message) {
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = 'Votre message a été envoyé !';
+        toast.className = 'toast fade-in';
+        toast.textContent = message;
         document.body.appendChild(toast);
 
         setTimeout(() => {
             toast.remove();
         }, 3000);
+    }
 
-        return false;
-    };
+    // Animation de la navbar au scroll
+    let lastScroll = 0;
+    const navbar = document.querySelector('.navbar');
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > lastScroll && currentScroll > 100) {
+            navbar.style.transform = 'translateY(-100%)';
+        } else {
+            navbar.style.transform = 'translateY(0)';
+        }
+        
+        if (currentScroll > 50) {
+            navbar.style.background = 'rgba(253, 251, 248, 0.95)';
+            navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
+        } else {
+            navbar.style.background = 'rgba(253, 251, 248, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
+        
+        lastScroll = currentScroll;
+    });
 
     // Style pour le toast de confirmation
     const style = document.createElement('style');
