@@ -1,0 +1,25 @@
+name: 🚀 Déploiement automatique sur VPS
+
+on:
+  push:
+    branches:
+      - main  # Change 'main' si ta branche principale a un autre nom
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Cloner le repo
+        uses: actions/checkout@v3
+
+      - name: 🚀 Déployer via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: 147.79.115.181  # Mets l'IP ou le domaine de ton VPS
+          username: massyl  # Ton user SSH
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/massyl/sites_web/laperruquiere
+            git pull origin main
+            docker restart laperruquiere  # Optionnel si nécessaire
