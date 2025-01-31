@@ -3,7 +3,7 @@ name: 🚀 Déploiement automatique sur VPS
 on:
   push:
     branches:
-      - main  # Change 'main' si ta branche principale a un autre nom
+      - main  # Change si ta branche principale a un autre nom
 
 jobs:
   deploy:
@@ -12,17 +12,25 @@ jobs:
     steps:
       - name: ⬇️ Cloner le repo
         uses: actions/checkout@v3
-        
-      - name: 🛠️ Vérifier la clé SSH
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' | wc -l
+
+      - name: 🔑 Ajouter la clé SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H srv709405 >> ~/.ssh/known_hosts
+
+      - name: 🛠️ Vérifier la connexion SSH
+        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no massyl@srv709405 "echo 'Connexion SSH OK ✅'"
 
       - name: 🚀 Déployer via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: 147.79.115.181  # Mets l'IP ou le domaine de ton VPS
-          username: massyl  # Ton user SSH
+          host: 147.79.115.181
+          username: massyl
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/massyl/sites_web/laperruquiere
             git pull origin main
             docker restart laperruquiere  # Optionnel si nécessaire
+
