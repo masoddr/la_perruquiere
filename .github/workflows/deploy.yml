@@ -21,7 +21,7 @@ jobs:
           ssh-keyscan -H 147.79.115.181 >> ~/.ssh/known_hosts
 
       - name: 🛠️ Vérifier la connexion SSH
-        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no massyl@srv709405 "echo 'Connexion SSH OK ✅'"
+        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no massyl@147.79.115.181 "echo 'Connexion SSH OK ✅'"
 
       - name: 🚀 Déployer via SSH
         uses: appleboy/ssh-action@master
