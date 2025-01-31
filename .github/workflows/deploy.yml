@@ -1,24 +1,9 @@
-name: 🚀 Déploiement automatique sur VPS
-
-on:
-  push:
-    branches:
-      - main  # Change si ta branche principale a un autre nom
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ⬇️ Cloner le repo
-        uses: actions/checkout@v3
-
       - name: 🔑 Ajouter la clé SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 147.79.115.181 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 147.79.115.181 >> ~/.ssh/known_hosts  # Remplacé srv709405 par l'IP
 
       - name: 🛠️ Vérifier la connexion SSH
         run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no massyl@147.79.115.181 "echo 'Connexion SSH OK ✅'"
@@ -26,11 +11,10 @@ jobs:
       - name: 🚀 Déployer via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: 147.79.115.181
+          host: 147.79.115.181  # Remplacé srv709405 par l'IP
           username: massyl
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/massyl/sites_web/laperruquiere
             git pull origin main
-            docker restart laperruquiere  # Optionnel si nécessaire
-
+            docker restart laperruquiere
