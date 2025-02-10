@@ -1,0 +1,50 @@
+// Couleurs
+$primary: #9f8bbd;    // Lavande pastel
+$secondary: #a8d8d3;  // Menthe douce
+$text: #5d576b;       // Gris violet profond
+$background: #ffffff;
+$light: #f9f7fc;      // Blanc légèrement lavande
+$accent: #f7d794;     // Pêche dorée pastel
+
+// Typographie
+$font-primary: 'Playfair Display', serif;
+$font-secondary: 'Montserrat', sans-serif;
+
+// Espacements
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 2rem;
+$spacing-xl: 4rem;
+
+// Breakpoints
+$mobile: 768px;
+$tablet: 1024px;
+$desktop: 1024px;
+$large: 1200px;
+
+// Border radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+$radius-full: 9999px;
+
+// Transitions
+$transition-base: all 0.3s ease;
+$transition-slow: all 0.5s ease;
+
+// Ombres
+$shadow-sm: 0 2px 4px rgba(159, 139, 189, 0.1);
+$shadow-md: 0 4px 6px rgba(159, 139, 189, 0.15);
+$shadow-lg: 0 10px 15px rgba(159, 139, 189, 0.2);
+
+// Z-index
+$z-negative: -1;
+$z-normal: 1;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal: 1000;
+$z-overlay: 900;
+$z-dropdown: 800;
+$z-popover: 1050;
+$z-tooltip: 1060; 
