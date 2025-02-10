@@ -83,6 +83,18 @@ nav {
     background: rgba(white, 0.95);
     backdrop-filter: blur(10px);
     box-shadow: $shadow-sm;
+
+    .nav-links a {
+      color: $primary;
+      
+      &::after {
+        background: $secondary;
+      }
+      
+      &:hover {
+        color: $secondary;
+      }
+    }
   }
 }
 
@@ -106,7 +118,7 @@ nav {
   gap: 2rem;
 
   a {
-    color: $primary;
+    color: white;
     text-decoration: none;
     font-weight: 500;
     transition: $transition-base;
@@ -120,12 +132,12 @@ nav {
       left: 0;
       width: 0;
       height: 2px;
-      background: $secondary;
+      background: white;
       transition: $transition-base;
     }
 
     &:hover {
-      color: $secondary;
+      color: rgba(white, 0.9);
 
       &::after {
         width: 100%;
@@ -157,7 +169,7 @@ nav {
   span {
     width: 100%;
     height: 2px;
-    background: $primary;
+    background: white;
     transition: $transition-base;
   }
 
@@ -179,6 +191,12 @@ nav {
 @include mobile {
   .hamburger {
     display: flex;
+
+    .nav-scrolled & {
+      span {
+        background: $primary;
+      }
+    }
   }
 
   .nav-links {
@@ -187,7 +205,7 @@ nav {
     left: 0;
     width: 100%;
     flex-direction: column;
-    background: rgba(white, 0.98);
+    background: rgba($primary, 0.95);
     backdrop-filter: blur(10px);
     padding: 1rem;
     gap: 1rem;
@@ -201,10 +219,27 @@ nav {
 
     a {
       padding: 0.5rem 2rem;
+      color: white;
       
       &:hover {
-        background: rgba($secondary, 0.1);
+        background: rgba(white, 0.1);
         border-radius: $radius-full;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+
+    .nav-scrolled & {
+      background: rgba(white, 0.98);
+      
+      a {
+        color: $primary;
+        
+        &:hover {
+          background: rgba($secondary, 0.1);
+        }
       }
     }
   }
