@@ -1,35 +1,31 @@
-name: "🚀 Déploiement automatique sur VPS"
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Change si ta branche principale est différente
+      - main # ou master, selon votre branche principale
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: ⬇️ Cloner le repo
+      - name: Checkout
         uses: actions/checkout@v3
-
-      - name: 🔑 Ajouter la clé SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 147.79.115.181 >> ~/.ssh/known_hosts  # Remplace srv709405 par ton IP
-
-      - name: 🛠️ Vérifier la connexion SSH
-        run: ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no massyl@147.79.115.181 "echo 'Connexion SSH OK ✅'"
-
-      - name: 🚀 Déployer via SSH
-        uses: appleboy/ssh-action@master
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          host: 147.79.115.181  # Remplace srv709405 par l'IP du VPS
-          username: massyl
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/massyl/sites_web/laperruquiere
-            git pull origin main
-            docker restart laperruquiere
+          node-version: '18'
+          
+      - name: Install Dependencies
+        run: npm install
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages 
